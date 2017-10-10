@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1>Semcamp certificate creator</h1>      
+      </div>
+      <form id="upload-csv-form" action="/upload" method="post" enctype="multipart/form-data" class="box login">
+          <label class="btn btn-primary" for="my-file-selector">
+          <input id="my-file-selector" type="file" name="csv" style="display:none">
+          Upload
+      </label>
+          <span class='label label-info' id="upload-file-info"></span>
+          <br>
+      </form>
+
+    </div>
+  </body>
+  <script>
+        $('#my-file-selector').change(function () {
+          $('#upload-file-info').html(this.files[0].name);
+          $('.next-1').show('slow');
+      
+          $('#upload-csv-form').submit(function (e) {
+              e.preventDefault();
+              var formData = new FormData($(this)[0]);
+              $.ajax({
+                  url: '/upload',
+                  type: 'POST',
+                  data: formData,
+                  async: false,
+                  cache: false,
+                  contentType: false,
+                  enctype: 'multipart/form-data',
+                  processData: false,
+                  success: function (response) {
+                      $('.keywords').show();
+                      $('#upload-csv-response').html(response);
+                  }
+              });
+          });
+          $('#upload-csv-form').submit();
+      });
+
+  </script>
+</html>
