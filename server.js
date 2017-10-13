@@ -25,6 +25,22 @@ creationTexts.forEach(creationText => {
     console.log(`${header} png created`);
 });
 
+creationTexts.forEach(creationText => {
+    if (!creationText) {
+        return;
+    }
+    var canvas = new Canvas(1200, 628);
+    var header = creationText.split('+')[0];
+    var description = creationText.split('+')[1];
+
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(Image, 0, 0, Image.width, Image.height);
+    updateBigHeaders(ctx, Image.width, Image.height, header, description);
+
+    fs.writeFileSync(`./creations_1200x628_headers/${header}.png`, canvas.toBuffer());
+    console.log(`${header} png created`);
+});
+
 var image = fs.readFileSync('./template600x600.png');
 var Image = new Canvas.Image;
 Image.src = image;
@@ -56,7 +72,25 @@ function getFont(fontSize, fontBase, canvasWidth) {
 function getFontBebas(fontSize, fontBase, canvasWidth) {
     var ratio = fontSize / fontBase;
     var size = canvasWidth * ratio;
-    return (size | 0) + ' Bebas Neue';
+    return (size | 0) + ' Lato Black';
+}
+
+function updateBigHeaders(ctx, width, height, header, description) {
+    var textWidth = ctx.measureText(header).width;
+
+    var textHeight;
+    if (header === 'LINIAŁY') {
+        textHeight = getFont(80, 1000, width - textWidth * 3).split(' ')[0];
+        ctx.font = getFont(80, 1000, width - textWidth * 3);
+    } else {
+         textHeight = getFont(100, 1000, width - textWidth * 3).split(' ')[0];
+        ctx.font = getFont(100, 1000, width - textWidth * 3);
+    }
+
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#40496c';
+    ctx.textAlign = "center";
+    ctx.fillText(header.toUpperCase(), 600, 500);
 }
 
 function updateBig(ctx, width, height, header, description) {
@@ -72,7 +106,7 @@ function updateBig(ctx, width, height, header, description) {
     }
 
     ctx.textBaseline = 'top';
-    ctx.fillStyle = '#DEDEEA';
+    ctx.fillStyle = '#40496c';
     ctx.textAlign = "center";
     ctx.fillText(header.toUpperCase(), 600, 470);
 
@@ -89,7 +123,7 @@ function updateSmall(ctx, width, height, header, description) {
     ctx.textBaseline = 'top';
     ctx.font = '120 Bebas Neue';
 
-    ctx.fillStyle = '#DEDEEA';
+    ctx.fillStyle = '#40496c';
     ctx.textAlign = "center";
     ctx.fillText(header.toUpperCase(), 300, 280);
 
